@@ -1,3 +1,4 @@
+import 'package:boi_poka/explore/screen/explore_screen.dart';
 import 'package:boi_poka/home/screen/home_screen.dart';
 import 'package:boi_poka/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
   // Screens list
   final List<Widget> _screens = [
     const HomeScreen(), // The home content we built
-    const Center(child: Text("Explore Screen")), // Placeholder
+    ExploreScreen(), // Placeholder
     const Center(child: Text("Post Book")),    // Placeholder
     const Center(child: Text("Requests")),     // Placeholder
     const Center(child: Text("Profile")),      // Placeholder
