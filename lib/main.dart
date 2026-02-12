@@ -1,6 +1,7 @@
 import 'package:boi_poka/explore/viewmodel/explore_viewmodel.dart';
 import 'package:boi_poka/home/screen/home_screen.dart';
 import 'package:boi_poka/home/viewmodel/home_view_model.dart';
+import 'package:boi_poka/my_books/viewmodel/my_books_viewmodel.dart';
 import 'package:boi_poka/navigation/main_navigation.dart';
 import 'package:boi_poka/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => HomeViewModel()..fetchHomeData()),
         ChangeNotifierProvider(create: (_) => ExploreViewModel()..fetchExploreData()),
+        ChangeNotifierProvider(create: (_) => MyBooksViewModel()..fetchMyBooks()),
       ],
       child: const BoipokaApp(),
     ),
