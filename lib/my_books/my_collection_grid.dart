@@ -68,7 +68,7 @@ class MyCollection extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              itemCount: 4,
+              itemCount: viewModel.myCollection.length,
               itemBuilder: (context, index) =>
                   MyBookCard(book: viewModel.myCollection[index]),
             ),
