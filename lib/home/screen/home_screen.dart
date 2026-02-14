@@ -9,7 +9,23 @@ import 'package:provider/provider.dart';
 import '../../theme/theme.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  HomeScreen({super.key});
+
+  final List<String> dhakaAreas = [
+    "Uttara",
+    "Gulshan",
+    "Banani",
+    "Mirpur",
+    "Dhanmondi",
+    "Mohammadpur",
+    "Bashundhara R/A",
+    "Badda",
+    "Khilgaon",
+    "Mohakhali",
+    "Farmgate",
+    "Old Dhaka",
+    "Puran Dhaka",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +34,11 @@ class HomeScreen extends StatelessWidget {
         child: Consumer<HomeViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.status == HomeStatus.loading) {
-              return const Center(child: CircularProgressIndicator(color: BoipokaTheme.primaryGreen));
+              return const Center(
+                child: CircularProgressIndicator(
+                  color: BoipokaTheme.primaryGreen,
+                ),
+              );
             }
 
             return CustomScrollView(
@@ -30,6 +50,19 @@ class HomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _buildLocationHeader(context),
+                            const CircleAvatar(
+                              radius: 25,
+                              backgroundColor: BoipokaTheme.deepForest,
+                              child: Icon(Icons.person, color: Colors.white),
+                            ),
+                          ],
+                        ),
+
                         _buildHeader(context),
                         const SizedBox(height: 20),
                         _buildSearchBar(viewModel),
@@ -50,7 +83,9 @@ class HomeScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 20),
                       itemCount: viewModel.nearbyBooks.length,
                       itemBuilder: (context, index) {
-                        return BookListingCard(book: viewModel.nearbyBooks[index]);
+                        return BookListingCard(
+                          book: viewModel.nearbyBooks[index],
+                        );
                       },
                     ),
                   ),
@@ -73,18 +108,19 @@ class HomeScreen extends StatelessWidget {
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverGrid(
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 0.95, // Makes the cards wider than they are tall
-                    ),
-                    delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                        return HomeRequestGridCard(book: viewModel.nearbyBooks[index]);
-                      },
-                      childCount: viewModel.nearbyBooks.length,
-                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio:
+                              0.95, // Makes the cards wider than they are tall
+                        ),
+                    delegate: SliverChildBuilderDelegate((context, index) {
+                      return HomeRequestGridCard(
+                        book: viewModel.nearbyBooks[index],
+                      );
+                    }, childCount: viewModel.nearbyBooks.length),
                   ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 100)),
@@ -97,25 +133,107 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildLocationHeader(BuildContext context) {
+    return InkWell(
+      onTap: () => _showLocationPicker(context),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+        child: Row(
           children: [
-            Text("Assalamu Alaikum,", style: Theme.of(context).textTheme.bodyMedium),
+            const Icon(Icons.location_on, color: Color(0xFF00D632), size: 18),
+            const SizedBox(width: 8),
             Text(
-              "Tamim Hasan", // Replace with auth user name
-              style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 24, color: BoipokaTheme.primaryGreen),
+              "Dhaka",
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
+            const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
           ],
         ),
-        const CircleAvatar(
-          radius: 25,
-          backgroundColor: BoipokaTheme.deepForest,
-          child: Icon(Icons.person, color: Colors.white),
-        )
+      ),
+    );
+  }
+
+  void _showLocationPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "Select Location",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+
+              // Option 1: Current Location
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: Color(0xFFE8F5E9),
+                  child: Icon(Icons.my_location, color: Color(0xFF00D632)),
+                ),
+                title: const Text("Use Current Location"),
+                subtitle: const Text("Find books near you automatically"),
+                onTap: () {
+                  // Future logic: Trigger Geolocator
+                  Navigator.pop(context);
+                },
+              ),
+
+              const Divider(height: 32),
+
+              // Option 2: Predefined List
+              const Text(
+                "Or choose from below",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              SizedBox(
+                height: 200, // Fixed height for the area list
+                child: ListView.builder(
+                  itemCount: dhakaAreas.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(dhakaAreas[index]),
+                      trailing: const Icon(Icons.chevron_right, size: 18),
+                      onTap: () {
+                        // Update UI/ViewModel with selection
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Good Morning,", style: Theme.of(context).textTheme.bodyMedium),
+        Text(
+          "Tamim Hasan", // Replace with auth user name
+          style: Theme.of(context).textTheme.displayLarge?.copyWith(
+            fontSize: 24,
+            color: BoipokaTheme.primaryGreen,
+          ),
+        ),
       ],
     );
   }
@@ -144,8 +262,21 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: BoipokaTheme.deepForest)),
-          TextButton(onPressed: onSeeAll, child: const Text("See All", style: TextStyle(color: BoipokaTheme.primaryGreen))),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: BoipokaTheme.deepForest,
+            ),
+          ),
+          TextButton(
+            onPressed: onSeeAll,
+            child: const Text(
+              "See All",
+              style: TextStyle(color: BoipokaTheme.primaryGreen),
+            ),
+          ),
         ],
       ),
     );

@@ -17,7 +17,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
 
   // Screens list
   final List<Widget> _screens = [
-    const HomeScreen(), // The home content we built
+    HomeScreen(), // The home content we built
     ExploreScreen(), // Placeholder
     const Center(child: Text("Post Book")),    // Placeholder
     const MyCollection(),     // Placeholder
