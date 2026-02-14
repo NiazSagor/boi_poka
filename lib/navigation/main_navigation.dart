@@ -54,7 +54,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
                   ),
                   label: "Post"
               ),
-              BottomNavigationBarItem(icon: Icon(Icons.swap_horiz_rounded), label: "Requests"),
+              BottomNavigationBarItem(icon: Icon(Icons.swap_horiz_rounded), label: "My Books"),
               BottomNavigationBarItem(icon: Icon(Icons.person_outline_rounded), label: "Profile"),
             ],
           ),
