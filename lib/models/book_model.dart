@@ -2,6 +2,7 @@ import 'package:boi_poka/models/user_model.dart';
 
 enum BookCondition { newCondition, good, old }
 enum ExchangeType { swap, lend, donate }
+enum BookStatus { active, requested, outOnLoan }
 
 class BookModel {
   final String id;
@@ -16,6 +17,12 @@ class BookModel {
   final UserModel? owner; // Nested object from the Supabase join
   final int viewCount;
 
+  final BookStatus status;
+  final int views;
+  final int requestsCount;
+  final bool hasNewRequest;
+  final String? lentTo;
+
   BookModel({
     required this.id,
     required this.title,
@@ -25,6 +32,11 @@ class BookModel {
     required this.category,
     required this.condition,
     required this.exchangeType,
+    this.status = BookStatus.active,
+    this.views = 0,
+    this.requestsCount = 0,
+    this.hasNewRequest = false,
+    this.lentTo,
     this.distance = 0.0,
     this.owner,
     this.viewCount = 0,
