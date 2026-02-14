@@ -4,6 +4,7 @@ import 'package:boi_poka/home/viewmodel/home_view_model.dart';
 import 'package:boi_poka/home/widgets/request_card.dart';
 import 'package:boi_poka/utils/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
 
 import '../../theme/theme.dart';
@@ -29,6 +30,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.microtask(() => context.read<HomeViewModel>().initLocationCheck());
     return Scaffold(
       body: SafeArea(
         child: Consumer<HomeViewModel>(
@@ -143,7 +145,7 @@ class HomeScreen extends StatelessWidget {
             const Icon(Icons.location_on, color: Color(0xFF00D632), size: 18),
             const SizedBox(width: 8),
             Text(
-              "Dhaka",
+              context.read<HomeViewModel>().currentLocationName,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
@@ -181,9 +183,30 @@ class HomeScreen extends StatelessWidget {
                 ),
                 title: const Text("Use Current Location"),
                 subtitle: const Text("Find books near you automatically"),
-                onTap: () {
-                  // Future logic: Trigger Geolocator
-                  Navigator.pop(context);
+                onTap: () async {
+                  try {
+                    Position? position = await context
+                        .read<HomeViewModel>()
+                        .determineUserPosition();
+                    print(
+                      "Success: ${position.latitude}, ${position.longitude}",
+                    );
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Your location has been updated"),
+                        ),
+                      );
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  }
                 },
               ),
 
