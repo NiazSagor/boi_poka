@@ -4,6 +4,8 @@ import 'package:boi_poka/explore/viewmodel/explore_viewmodel.dart';
 import 'package:boi_poka/models/genre.dart';
 import 'package:boi_poka/theme/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:provider/provider.dart';
 
 class ExploreScreen extends StatelessWidget {
@@ -15,63 +17,101 @@ class ExploreScreen extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          // const GoogleMap(
-          //   initialCameraPosition: CameraPosition(
-          //     target: LatLng(23.7947, 90.4015), // Banani/Dhanmondi area
-          //     zoom: 14,
-          //   ),
-          //   myLocationEnabled: true,
-          //   zoomControlsEnabled: false,
-          //   mapToolbarEnabled: false,
-          // ),
-
-          SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(child: _buildFloatingSearchBar()),
-
-                //const SliverToBoxAdapter(child: SizedBox(height: 150)),
-
-                SliverToBoxAdapter(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFF9F8F4),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(32),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        _buildSectionHeader("Browse Genres"),
-                        _buildGenreGrid(),
-                        _buildSectionHeaderWithAction("Recommended for You", () {}),
-                        SizedBox(
-                          height: 300, // Height to accommodate cover + text
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 25, right: 25),
-                            itemCount: viewModel.recommendedBooks.length,
-                            itemBuilder: (context, index) {
-                              return RecommendedBookCard(book: viewModel.recommendedBooks[index]);
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 100),
-                      ],
+          FlutterMap(
+            options: const MapOptions(
+              initialCenter: LatLng(23.7947, 90.4015), // Dhaka Coordinates
+              initialZoom: 13.0,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.byteutility.dev.boipoka',
+              ),
+              const MarkerLayer(
+                markers: [
+                  Marker(
+                    point: LatLng(23.7947, 90.4015),
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.pin_drop_sharp,
+                      color: Colors.red,
+                      size: 40,
                     ),
                   ),
-                ),
-              ],
-            ),
+                  Marker(
+                    point: LatLng(23.8047, 90.4115),
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.pin_drop_sharp,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                  Marker(
+                    point: LatLng(23.7847, 90.3915),
+                    width: 40,
+                    height: 40,
+                    child: Icon(
+                      Icons.pin_drop_sharp,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
 
-          // 3. Bottom Preview Card (Optional, for when a pin is tapped)
-          // const Positioned(
-          //   bottom: 100,
-          //   left: 20,
-          //   right: 20,
-          //   child: MapBookPreviewCard(),
-          // ),
+          SafeArea(child: Column(children: [_buildFloatingSearchBar()])),
+
+          DraggableScrollableSheet(
+            initialChildSize: 0.3, // Starts showing just the top header
+            minChildSize: 0.15, // How low it can go
+            maxChildSize: 0.9,
+            builder: (context, scrollController) {
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF9F8F4),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+                  boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+                ),
+                child: ListView(
+                  controller: scrollController,
+                  children: [
+                    Center(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(vertical: 12),
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    _buildSectionHeader("Browse Genres"),
+                    _buildGenreGrid(),
+                    _buildSectionHeaderWithAction("Recommended for You", () {}),
+                    SizedBox(
+                      height: 300, // Height to accommodate cover + text
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(left: 25, right: 25),
+                        itemCount: viewModel.recommendedBooks.length,
+                        itemBuilder: (context, index) {
+                          return RecommendedBookCard(
+                            book: viewModel.recommendedBooks[index],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
