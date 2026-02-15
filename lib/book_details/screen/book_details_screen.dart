@@ -1,5 +1,6 @@
 import 'package:boi_poka/models/book_model.dart';
 import 'package:flutter/material.dart';
+import 'package:readmore/readmore.dart';
 
 class BookDetailsScreen extends StatelessWidget {
   final BookModel book; // Replace with your BookModel
@@ -69,19 +70,17 @@ class BookDetailsScreen extends StatelessWidget {
                       _buildStatChip("Type", "Hardcover"),
                     ],
                   ),
-                  _buildPosterDetauls(),
+                  _buildPosterDetails(),
                   const SizedBox(height: 30),
                   const Text(
                     "Description",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    "This is where the book summary goes. In a real scenario, this would be a long string fetched from your database about the plot or condition notes.",
-                    style: TextStyle(color: Colors.grey[700], height: 1.5),
-                  ),
 
-                  const SizedBox(height: 120), // Space for bottom button
+                  _buildDescription(),
+
+                  const SizedBox(height: 120),
                 ],
               ),
             ),
@@ -116,7 +115,7 @@ class BookDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPosterDetauls() {
+  Widget _buildPosterDetails() {
     return Column(
       children: [
         // 3. Poster Details Section
@@ -227,6 +226,28 @@ class BookDetailsScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDescription() {
+    return ReadMoreText(
+      "This is where the book summary goes. In a real scenario, this would be a long string fetched from your database about the plot or condition notes.",
+      trimLines: 3,
+      colorClickableText: const Color(0xFF00D632),
+      trimMode: TrimMode.Line,
+      trimCollapsedText: ' Show more',
+      trimExpandedText: ' Show less',
+      moreStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF1B4332),
+      ),
+      lessStyle: const TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF1B4332),
+      ),
+      style: TextStyle(color: Colors.grey[700], height: 1.5, fontSize: 15),
     );
   }
 
