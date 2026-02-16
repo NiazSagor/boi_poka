@@ -2,6 +2,7 @@ import 'package:boi_poka/explore/screen/explore_screen.dart';
 import 'package:boi_poka/home/screen/home_screen.dart';
 import 'package:boi_poka/my_books/my_collection_grid.dart';
 import 'package:boi_poka/post_new_book/screen/post_book_screen.dart';
+import 'package:boi_poka/profile/screen/profile_screen.dart';
 import 'package:boi_poka/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,7 @@ class _MainNavigationWrapperState extends State<MainNavigationWrapper> {
     ExploreScreen(), // Placeholder
     PostBookScreen(),    // Placeholder
     const MyCollection(),     // Placeholder
-    const Center(child: Text("Profile")),      // Placeholder
+    ProfileScreen(),      // Placeholder
   ];
 
   @override
