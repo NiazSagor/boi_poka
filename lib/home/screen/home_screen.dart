@@ -1,3 +1,4 @@
+import 'package:boi_poka/exchange_request/screen/manage_requests_screen.dart';
 import 'package:boi_poka/home/components/book_listing_card.dart';
 import 'package:boi_poka/home/components/small_book_card.dart';
 import 'package:boi_poka/home/viewmodel/home_view_model.dart';
@@ -103,7 +104,14 @@ class HomeScreen extends StatelessWidget {
 
                 // 5. Exchange Requests Header
                 SliverToBoxAdapter(
-                  child: _buildSectionHeader("Book Exchange Requests", () {}),
+                  child: _buildSectionHeader("Book Exchange Requests", () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ManageRequestsScreen(),
+                      ),
+                    );
+                  }),
                 ),
 
                 // 6. Horizontal Requests List
